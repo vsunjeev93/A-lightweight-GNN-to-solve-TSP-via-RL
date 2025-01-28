@@ -7,34 +7,44 @@ from state_transition import state_transition
 
 torch.manual_seed(2)
 epoch = 20
-city = 50
+city = 20
 batch = 512
 instances = 2500
 mse_loss = torch.nn.MSELoss()
-actor = actor(4, 512)
-critic = critic(4, 512)
+actor = actor(4, 256)
+critic = critic(4, 256)
 LR = 0.0001
 optimizer = torch.optim.Adam(
     list(actor.parameters()) + list(critic.parameters()), lr=LR
 )
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=4, gamma=0.8)
 steps_per_epoch = 20
 device = torch.device("cuda" if torch.cuda.is_available() else "mps")
-actor=actor.to(device)
-critic=critic.to(device)
+actor = actor.to(device)
+critic = critic.to(device)
+# After model creation
+
+for param in actor.parameters():
+    if len(param.shape) > 1:
+        torch.nn.init.kaiming_normal_(param)
+for param in critic.parameters():
+    if len(param.shape) > 1:
+        torch.nn.init.kaiming_normal_(param)
 torch.set_printoptions(profile="full")
 for e in range(epoch):
     for t in range(steps_per_epoch):
-        batch = data_generator(city, 100, 10)
+        batch = data_generator(city, 1000, 10)
         for state in batch:
-            state=state.to(device)
+            state = state.to(device)
             n_city = 0
             tour = []
             prev_action = None
             rewards = []
             lls = []
             state_value = critic(state)
+            x0 = None
             while n_city < city:
-                action, ll = actor(state)
+                action, ll, x0 = actor(state, prev_node=prev_action, x0=x0)
                 tour.append(action)
                 lls.append(ll)
                 state = state_transition(state, action, prev_action)
@@ -78,5 +88,8 @@ for e in range(epoch):
                 "epcoh",
                 e,
                 t,
+                "step",
+                scheduler.get_last_lr(),
             )
-torch.save(actor.state_dict(), "actor_20.pt")
+    scheduler.step()
+torch.save(actor.state_dict(), f"actor_{city}.pt")

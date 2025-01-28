@@ -12,12 +12,36 @@ def generate_graph_from_data(n, points):
     angle_center = torch.atan2(points[:, 1] - center[1], points[:, 0] - center[0])
     features = []
     edges = []
-    angle_center_list=[]
+    angle_center_list = []
+    # print(points)
+    k = 3
     for i in range(n):
-        angle_center_list.append(angle_center[i])   
+        distances = torch.linalg.norm(points - points[i], dim=1)
+        # print(distances)
+        knn_distances, knn_indices = torch.topk(distances, k=k + 1, largest=False)
+        # Exclude self-distance
+        knn_features = knn_distances[1:]
+        knn_indices = knn_indices[1:]
+        # for j in range(k):
+        #     edges.append(torch.tensor([i, knn_indices[j]]))
+        #     edges.append(torch.tensor([knn_indices[j], i]))
+        # print(knn_features)
+        angle_center_list.append(angle_center[i])
+        # features.append(
+        #     torch.tensor([points[i, 0], points[i, 1], distance[i], angle_center[i]])
+        # )
+        # print(points[i].size(),distance[i],angle_center[i].size(),'size')
         features.append(
-            torch.tensor([points[i, 0], points[i, 1], distance[i], angle_center[i]])
+            torch.cat(
+                [
+                    points[i],
+                    distance[i].unsqueeze(0),
+                    angle_center[i].unsqueeze(0),
+                ]
+            )
         )
+        # print(features)
+        # assert 1==2
         edges.append(torch.tensor([n, i]))
         edges.append(torch.tensor([n, i]))
     features.append(torch.tensor([center[0], center[1], 0, 0]))
@@ -39,6 +63,7 @@ def data_generator(n, instances=10000, batch_size=12):
     graphs = []
     np.random.seed(42)
     for instance in range(instances):
+        # print(n)
         points = torch.rand((n, 2))
         graph = generate_graph_from_data(n, points)
         graphs.append(graph)
@@ -46,5 +71,5 @@ def data_generator(n, instances=10000, batch_size=12):
     return loader
 
 
-loader = data_generator(5, 3, 1)
-print(loader)
+# loader = data_generator(5, 3, 1)
+# print(loader)
