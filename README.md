@@ -1,3 +1,1 @@
 # TSP-using-RL-and-GNNs-in-PyTorch-geometric
-
-Not doing too well. 10% less than RL TSP benchmarks in literature. Needs investigation. Work in progress...
