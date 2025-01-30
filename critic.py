@@ -26,7 +26,7 @@ class critic(torch.nn.Module):
             data.center_node_index, :
         ]  # size(center_node_embed) = (num_batch, num_hidden*2)
         x = self.linear1(center_node_embed)  # size(x) = (num_batch, num_hidden)
-        x = torch.nn.functional.tanh(x)
+        x=torch.nn.functional.relu(x)
         x = self.linear2(x)
         return x
 

@@ -7,21 +7,21 @@ from state_transition import state_transition
 
 torch.manual_seed(2)
 epoch = 20
-city = 20
-batch = 512
-instances = 2500
+city = 500
+batch_size = 2 #num batches- if GPU increase this number for lower number of cities it can be higher (e.g. 64)
+instances = 100 #per step in epoch
 mse_loss = torch.nn.MSELoss()
-actor = actor(4, 256)
-critic = critic(4, 256)
+actor = actor(4, 128)
+critic = critic(4, 128)
 LR = 0.0001
 optimizer = torch.optim.Adam(
     list(actor.parameters()) + list(critic.parameters()), lr=LR
 )
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=4, gamma=0.8)
-steps_per_epoch = 20
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.9)
+steps_per_epoch = 10
 device = torch.device("cuda" if torch.cuda.is_available() else "mps")
-actor = actor.to(device)
-critic = critic.to(device)
+actor=actor.to(device)
+critic=critic.to(device)
 # After model creation
 
 for param in actor.parameters():
@@ -29,22 +29,22 @@ for param in actor.parameters():
         torch.nn.init.kaiming_normal_(param)
 for param in critic.parameters():
     if len(param.shape) > 1:
-        torch.nn.init.kaiming_normal_(param)
+         torch.nn.init.kaiming_normal_(param)
 torch.set_printoptions(profile="full")
 for e in range(epoch):
     for t in range(steps_per_epoch):
-        batch = data_generator(city, 1000, 10)
+        batch = data_generator(city, instances, batch_size)
         for state in batch:
-            state = state.to(device)
+            state=state.to(device)
             n_city = 0
             tour = []
             prev_action = None
             rewards = []
             lls = []
             state_value = critic(state)
-            x0 = None
+            x0=None
             while n_city < city:
-                action, ll, x0 = actor(state, prev_node=prev_action, x0=x0)
+                action, ll,x0 = actor(state, prev_node=prev_action,x0=x0)
                 tour.append(action)
                 lls.append(ll)
                 state = state_transition(state, action, prev_action)
@@ -88,7 +88,7 @@ for e in range(epoch):
                 "epcoh",
                 e,
                 t,
-                "step",
+                'step',
                 scheduler.get_last_lr(),
             )
     scheduler.step()
