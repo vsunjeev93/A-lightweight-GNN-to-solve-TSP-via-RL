@@ -4,7 +4,7 @@ A Graph Isomorphism Network (GIN) based reinforcement learning approach to solve
 
 ## Architecture
 - **Graph Structure**: Cities as nodes with features (coordinates, distance and angle from central node) connected to a central node
-- **Actor-Critic Networks**: Both use GIN layers with skip connections and batch normalization
+- **Actor-Critic Networks**: Both use GIN layers with skip connections
 - **GIN Layer**: Two-layer MLPs with feature concatenation and ReLU activations
 
 ### Feature Vector Structure
