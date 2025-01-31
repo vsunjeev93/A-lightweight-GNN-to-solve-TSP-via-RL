@@ -21,7 +21,7 @@ Each node in the graph contains a 4-dimensional feature vector:
 
 ### State Transitions
 The environment state updates after each city selection through two mechanisms:
-1. **Edge Updates**: When a city is selected
+**Edge Updates**: When a city is selected
    - New bidirectional edges are added between:
      - The previously selected city (if any)
      - The currently selected city
