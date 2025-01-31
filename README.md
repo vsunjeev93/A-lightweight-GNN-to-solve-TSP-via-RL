@@ -22,10 +22,16 @@ Each node in the graph contains a 4-dimensional feature vector:
 ### State Transitions
 The environment state updates after each city selection through two mechanisms:
 
-**Edge Updates**: When a city is selected
+### State Transitions
+The environment state updates after each city selection through two mechanisms:
+1. **Edge Updates**: When a city is selected
    - New bidirectional edges are added between:
      - The previously selected city (if any)
      - The currently selected city
+2. **Masking**: Tracks visited cities
+   - Each city starts as unmasked (available)
+   - After a city is selected, it's masked (marked as visited)
+   - The mask ensures each city is visited exactly once
 
 ## Usage
 
