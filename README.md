@@ -28,12 +28,6 @@ python test.py --city 20 --embed 128
 - `--LR`: Learning rate (default: 0.0001)
 - `--decay`: Learning rate decay (default: 0.9)
 
-## Implementation Details
-- PyTorch Geometric for GNN operations
-- State transitions via edge updates and node masking
-- Kaiming initialization and gradient clipping (max norm: 1.0)
-- Learning rate decay for optimization
-
 ## Requirements
 - PyTorch
 - PyTorch Geometric
