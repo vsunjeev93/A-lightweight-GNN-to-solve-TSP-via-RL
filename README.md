@@ -7,6 +7,16 @@ A Graph Isomorphism Network (GIN) based reinforcement learning approach to solve
 - **Actor-Critic Networks**: Both use GIN layers with skip connections and batch normalization
 - **GIN Layer**: Two-layer MLPs with feature concatenation and ReLU activations
 
+### Feature Vector Structure
+Each node in the graph contains a 4-dimensional feature vector:
+- For city nodes: `[x, y, d, θ]`
+  - `x, y`: City coordinates (normalized to [0,1])
+  - `d`: Distance from the city to the center node
+  - `θ`: Angle between the city and center node (in radians)
+- For center node: `[x_c, y_c, 0, 0]`
+  - `x_c, y_c`: Mean coordinates of all cities
+  - Last two dimensions are padded with zeros
+
 ![image](https://github.com/user-attachments/assets/a468edf5-5e60-4cdc-b5b7-db988108eb10)
 
 
