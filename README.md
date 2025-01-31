@@ -1,6 +1,6 @@
 # GNN-based Reinforcement Learning for TSP
 
-A lightweight Graph Neural Network (GNN) based reinforcement learning approach to solve the Traveling Salesman Problem (TSP) using an actor-critic architecture with Graph Isomorphism Networks (GIN).
+A Graph Isomorphism Network (GIN) based reinforcement learning approach to solve the Traveling Salesman Problem (TSP) using an actor-critic architecture.
 
 ## Architecture
 - **Graph Structure**: Cities as nodes with features (coordinates, distance from center, angle) connected to a central node
