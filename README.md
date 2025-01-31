@@ -7,7 +7,8 @@ A Graph Isomorphism Network (GIN) based reinforcement learning approach to solve
 - **Actor-Critic Networks**: Both use GIN layers with skip connections and batch normalization
 - **GIN Layer**: Two-layer MLPs with feature concatenation and ReLU activations
 
-![image](https://github.com/user-attachments/assets/98b712dd-7898-45b3-b227-366ff6740ad7)
+![image](https://github.com/user-attachments/assets/a468edf5-5e60-4cdc-b5b7-db988108eb10)
+
 
 ## Usage
 
