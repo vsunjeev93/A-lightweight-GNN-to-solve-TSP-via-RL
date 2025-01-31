@@ -2,15 +2,17 @@ import torch
 from actor import actor
 from state_transition import state_transition
 from data_generator import data_generator
-params={'Nx':3, # number of MHA layers in encoder sequentially
-'embed':128, #embedding dimension
-'heads':8}
-city=20
+import argparse
+parser = argparse.ArgumentParser('test actor')
+parser.add_argument('--city', type=int, default=20, help='city')
+parser.add_argument('--embed', type=int, default=128, help='dim of embed layer')
+args=parser.parse_args()
+city=args.city
 device = torch.device("cuda" if torch.cuda.is_available() else "mps")
-model=actor(4,128).to(device)
+model=actor(4,args.embed).to(device)
 model.load_state_dict(torch.load(f'actor_{city}.pt'))
 model.eval()
-batch = data_generator(city, 512,1 )
+batch = data_generator(city, 10,1 )
 torch.manual_seed(2)
 distances=[]
 for state in batch:
@@ -38,4 +40,5 @@ for state in batch:
                     state_actor[:, 0, :] - state_actor[:, -1, :], dim=1
                 )
                 distances.append(distance)
-print(torch.cat(distances).mean())
+                print(distance.mean())
+print('mean of entire set: ',torch.cat(distances).mean())

@@ -1,6 +1,5 @@
 import torch_geometric
 import torch
-from GAT import GAT
 from GIN import GIN
 from torch_geometric.utils import group_argsort, index_to_mask, unbatch, softmax
 

@@ -4,26 +4,35 @@ from torch.utils.data import DataLoader
 from critic import critic
 from data_generator import data_generator
 from state_transition import state_transition
+import argparse
+parser = argparse.ArgumentParser('train model')
+parser.add_argument('--city', type=int, default=20, help='city')
+parser.add_argument('--batch_size', type=int, default=20, help='batch size')
+parser.add_argument('--instances', type=int, default=1000, help='instance per epoch')
+parser.add_argument('--epoch', type=int, default=20, help='epoch')
+parser.add_argument('--steps_per_epoch', type=int, default=100, help='steps per epoch')
+parser.add_argument('--LR', type=float, default=0.0001, help='learning rate')
+parser.add_argument('--decay', type=float, default=0.9, help='learning rate decay')
+parser.add_argument('--embed', type=int, default=128, help='dim of embed layer')
 
-torch.manual_seed(2)
-epoch = 20
-city = 500
-batch_size = 2 #num batches- if GPU increase this number for lower number of cities it can be higher (e.g. 64)
-instances = 100 #per step in epoch
+args = parser.parse_args()
+epoch = args.epoch
+city = args.city
+batch_size = args.batch_size 
+instances = args.instances #per step in epoch
 mse_loss = torch.nn.MSELoss()
-actor = actor(4, 128)
-critic = critic(4, 128)
-LR = 0.0001
+actor = actor(4, args.embed)
+critic = critic(4, args.embed)
+LR = args.LR
 optimizer = torch.optim.Adam(
     list(actor.parameters()) + list(critic.parameters()), lr=LR
 )
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.9)
-steps_per_epoch = 10
+steps_per_epoch = args.steps_per_epoch
 device = torch.device("cuda" if torch.cuda.is_available() else "mps")
 actor=actor.to(device)
 critic=critic.to(device)
-# After model creation
-
+# After model creation initializing the weights. This helps training the model faster.
 for param in actor.parameters():
     if len(param.shape) > 1:
         torch.nn.init.kaiming_normal_(param)

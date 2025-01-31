@@ -13,7 +13,6 @@ def generate_graph_from_data(n, points):
     features = []
     edges = []
     angle_center_list=[]
-    # print(points)
     k=3
     for i in range(n):
         angle_center_list.append(angle_center[i])   
@@ -39,7 +38,7 @@ def generate_graph_from_data(n, points):
 
 def data_generator(n, instances=10000, batch_size=12):
     graphs = []
-    np.random.seed(22)
+    torch.manual_seed(5)
     for instance in range(instances):
         # print(n)
         points = torch.rand((n, 2))

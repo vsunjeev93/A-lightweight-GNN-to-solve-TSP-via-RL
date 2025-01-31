@@ -1,6 +1,5 @@
 import torch_geometric
 import torch
-from GAT import GAT
 from GIN import GIN
 from torch_geometric.nn import norm
 
