@@ -50,10 +50,7 @@ class actor(torch.nn.Module):
         x = softmax(x, index=batch)
         x = torch.stack(unbatch(x, batch))
         if self.training:
-            try:
-                sample = torch.multinomial(x, num_samples=1)
-            except RuntimeError:
-                raise RuntimeError(f"{x_lin2} lol {x0} {data.mask} some values here are nan or inf")
+            sample = torch.multinomial(x, num_samples=1)
         else:
             _, sample = torch.max(x, dim=1)
             sample = sample.unsqueeze(-1)
